@@ -1,0 +1,201 @@
+product_id,category,product_name,price,cost,supplier_id
+1,Food,Bread,248,174,20
+2,Electronics,Headphones,2463,1547,7
+3,Clothing,T-shirt,265,162,7
+4,Sports,Basketball,491,378,11
+5,Books,Dictionary,194,150,8
+6,Electronics,Keyboard,1723,1300,15
+7,Home & Kitchen,Bottle,186,142,20
+8,Sports,Basketball,347,235,6
+9,Toys,Toy Car,88,61,5
+10,Beauty,Perfume,247,190,20
+11,Food,Coffee,215,135,9
+12,Beauty,Face Cream,200,157,14
+13,Books,Math Book,156,112,10
+14,Toys,Racket,40,27,14
+15,Books,Science Book,143,109,3
+16,Food,Chocolate,191,136,7
+17,Toys,Building Blocks,59,42,12
+18,Beauty,Lipstick,121,92,4
+19,Toys,Doll,89,61,20
+20,Toys,Racket,89,62,19
+21,Electronics,Mouse,896,574,2
+22,Sports,Tennis Racket,416,283,19
+23,Toys,Doll,26,20,8
+24,Electronics,Keyboard,561,416,19
+25,Electronics,Headphones,1123,742,18
+26,Clothing,T-shirt,293,186,13
+27,Electronics,Mouse,1566,1092,16
+28,Sports,Basketball,389,259,11
+29,Food,Biscuits,159,102,14
+30,Food,Coffee,273,179,12
+31,Food,Chocolate,244,156,10
+32,Food,Biscuits,252,187,20
+33,Clothing,Jacket,286,224,9
+34,Toys,Toy Car,45,30,14
+35,Home & Kitchen,Spoon,155,119,4
+36,Clothing,Jacket,188,134,6
+37,Books,Science Book,103,82,14
+38,Home & Kitchen,Pan,169,110,20
+39,Sports,Tennis Racket,203,128,4
+40,Clothing,Dress,210,138,10
+41,Clothing,T-shirt,260,185,1
+42,Toys,Toy Car,81,56,13
+43,Food,Chocolate,142,98,3
+44,Clothing,Jacket,177,128,8
+45,Toys,Puzzle,97,69,12
+46,Food,Tea,198,122,15
+47,Home & Kitchen,Spoon,181,113,15
+48,Home & Kitchen,Knife,171,120,14
+49,Home & Kitchen,Bottle,186,116,3
+50,Books,Science Book,111,81,2
+51,Clothing,T-shirt,189,136,15
+52,Toys,Puzzle,100,75,20
+53,Sports,Yoga Mat,299,232,5
+54,Home & Kitchen,Spoon,164,105,17
+55,Toys,Puzzle,78,59,10
+56,Toys,Racket,26,19,13
+57,Electronics,Cellphone,1107,735,2
+58,Electronics,Headphones,782,580,19
+59,Beauty,Perfume,147,90,18
+60,Books,Science Book,111,73,7
+61,Books,Story Book,171,132,19
+62,Beauty,Lipstick,162,107,6
+63,Beauty,Lipstick,133,99,18
+64,Home & Kitchen,Pan,164,101,4
+65,Toys,Doll,26,18,14
+66,Food,Biscuits,191,145,13
+67,Clothing,Jacket,197,141,3
+68,Home & Kitchen,Tong,200,150,12
+69,Toys,Puzzle,78,60,11
+70,Toys,Racket,54,43,4
+71,Food,Chocolate,237,176,3
+72,Clothing,T-shirt,181,139,16
+73,Books,Dictionary,179,120,7
+74,Home & Kitchen,Knife,166,120,9
+75,Food,Chocolate,180,129,3
+76,Electronics,Keyboard,616,446,15
+77,Food,Coffee,215,160,20
+78,Beauty,Face Cream,225,154,5
+79,Sports,Football,485,369,12
+80,Clothing,Jeans,199,148,2
+81,Clothing,Jacket,182,125,3
+82,Food,Biscuits,226,177,8
+83,Beauty,Face Cream,212,143,20
+84,Clothing,T-shirt,150,113,11
+85,Books,Story Book,177,117,1
+86,Sports,Football,430,316,6
+87,Food,Biscuits,155,108,13
+88,Food,Bread,257,156,8
+89,Clothing,Jeans,187,133,13
+90,Food,Bread,145,103,8
+91,Books,Story Book,125,83,18
+92,Toys,Doll,83,50,18
+93,Beauty,Perfume,219,133,16
+94,Beauty,Shampoo,244,156,19
+95,Clothing,Jacket,190,149,14
+96,Electronics,Cellphone,861,588,19
+97,Toys,Building Blocks,70,43,17
+98,Clothing,Dress,299,190,14
+99,Toys,Puzzle,84,67,2
+100,Sports,Basketball,386,284,15
+101,Electronics,Laptop,1276,803,4
+102,Beauty,Perfume,125,96,19
+103,Home & Kitchen,Spoon,194,132,16
+104,Sports,Basketball,286,226,9
+105,Clothing,Jacket,221,174,11
+106,Food,Chocolate,126,97,15
+107,Books,Dictionary,182,115,9
+108,Food,Bread,217,168,16
+109,Food,Tea,247,149,11
+110,Beauty,Face Cream,161,123,3
+111,Books,Dictionary,154,110,19
+112,Toys,Racket,89,54,17
+113,Sports,Football,280,209,15
+114,Books,Dictionary,175,136,13
+115,Toys,Racket,28,17,4
+116,Home & Kitchen,Bottle,183,129,6
+117,Beauty,Shampoo,207,134,12
+118,Food,Chocolate,102,76,19
+119,Food,Bread,215,140,10
+120,Books,Science Book,163,124,9
+121,Clothing,Dress,201,127,20
+122,Sports,Tennis Racket,224,144,18
+123,Beauty,Perfume,170,135,1
+124,Beauty,Shampoo,205,148,4
+125,Books,Dictionary,151,106,14
+126,Clothing,Jeans,195,119,19
+127,Clothing,Jeans,173,107,15
+128,Clothing,T-shirt,217,142,1
+129,Beauty,Shampoo,197,121,19
+130,Sports,Yoga Mat,211,164,2
+131,Sports,Football,407,294,3
+132,Food,Biscuits,259,196,17
+133,Food,Tea,140,97,20
+134,Electronics,Headphones,957,603,16
+135,Electronics,Laptop,2009,1468,15
+136,Home & Kitchen,Tong,192,144,2
+137,Electronics,Headphones,837,541,6
+138,Sports,Basketball,229,175,7
+139,Electronics,Laptop,2424,1900,3
+140,Home & Kitchen,Bottle,197,142,16
+141,Food,Biscuits,177,125,2
+142,Electronics,Cellphone,1188,940,19
+143,Food,Biscuits,151,95,12
+144,Home & Kitchen,Bottle,182,132,9
+145,Clothing,T-shirt,170,124,9
+146,Books,Story Book,162,114,20
+147,Beauty,Perfume,153,109,16
+148,Home & Kitchen,Plate,182,117,16
+149,Electronics,Tablet,2179,1525,2
+150,Food,Biscuits,284,214,2
+151,Food,Coffee,190,120,5
+152,Beauty,Lipstick,247,157,1
+153,Food,Biscuits,243,189,2
+154,Books,Science Book,191,153,8
+155,Electronics,Keyboard,1108,757,12
+156,Sports,Football,297,201,14
+157,Clothing,Jacket,281,175,8
+158,Electronics,Keyboard,1151,758,3
+159,Clothing,T-shirt,246,159,15
+160,Food,Bread,237,160,11
+161,Toys,Puzzle,10,7,11
+162,Clothing,Jeans,274,195,5
+163,Home & Kitchen,Spoon,199,153,14
+164,Toys,Doll,72,45,4
+165,Home & Kitchen,Bottle,153,114,14
+166,Sports,Tennis Racket,370,226,1
+167,Books,Dictionary,168,110,14
+168,Sports,Basketball,277,193,12
+169,Electronics,Mouse,2342,1436,10
+170,Beauty,Lipstick,213,145,14
+171,Food,Chocolate,222,137,18
+172,Home & Kitchen,Knife,167,120,12
+173,Clothing,Dress,177,141,10
+174,Toys,Racket,66,42,13
+175,Sports,Yoga Mat,416,293,17
+176,Books,Story Book,102,75,14
+177,Home & Kitchen,Bottle,195,153,3
+178,Beauty,Lipstick,246,175,15
+179,Beauty,Face Cream,218,173,11
+180,Beauty,Shampoo,214,168,12
+181,Sports,Football,493,387,18
+182,Food,Biscuits,208,144,13
+183,Toys,Racket,18,14,7
+184,Electronics,Laptop,2434,1831,8
+185,Beauty,Face Cream,176,109,2
+186,Home & Kitchen,Spoon,180,127,20
+187,Books,Science Book,189,127,1
+188,Electronics,Tablet,610,479,7
+189,Clothing,Dress,216,147,11
+190,Electronics,Mouse,917,652,1
+191,Sports,Football,379,260,10
+192,Books,Science Book,177,119,3
+193,Sports,Basketball,206,159,8
+194,Electronics,Cellphone,682,507,15
+195,Books,Story Book,190,122,13
+196,Clothing,Jeans,194,134,6
+197,Food,Chocolate,185,112,9
+198,Books,Science Book,178,121,12
+199,Books,Story Book,148,111,13
+200,Sports,Football,454,341,7
