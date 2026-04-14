@@ -1,0 +1,224 @@
+-- Exploratory Data Analysis (EDA) 📊
+
+-- Sales Overview
+--================
+
+-- Order Status Distribution (%)
+
+SELECT 
+  order_status,
+  total_order,
+  (total_order * 100.0) / (SELECT COUNT (order_id) FROM orders) AS rate_value
+FROM (
+  SELECT 
+  order_status,
+  COUNT (order_status) as total_order
+FROM orders
+GROUP BY order_status
+)t;
+
+
+-- GROSS ORDERS - (500)
+
+-- Pending - 109
+
+SELECT COUNT (*)
+FROM orders
+WHERE order_status = 'pending';
+
+-- Shipped - 115
+
+SELECT COUNT (*)
+FROM orders
+WHERE order_status = 'shipped';
+
+-- Delivered - 102
+
+SELECT COUNT (*)
+FROM orders
+WHERE order_status = 'delivered';
+
+-- Cancelled - 100
+
+SELECT COUNT (*)
+FROM orders
+WHERE order_status = 'cancelled';
+
+-- Unverified- 74
+
+SELECT COUNT (*)
+FROM orders
+WHERE order_status = 'unverified';
+
+-- Orders with existing transaction headers but no corresponding order-detail records
+
+-- REALIZED SALES - (102)
+
+-- Delivered - 102
+
+SELECT COUNT (*)
+FROM orders
+WHERE order_status = 'delivered';
+
+--Delivered orders were treated as realized sales because revenue is considered complete upon successful customer receipt.
+
+
+-- Product Analysis
+--===================
+
+-- Top-selling products
+
+SELECT 
+  p.product_name,
+  SUM(od.quantity) AS total_sold
+FROM order_details od 
+JOIN products p ON od.product_id = p.product_id
+JOIN orders o ON od.order_id =o.order_id
+WHERE o.order_status = 'delivered'
+GROUP BY p.product_name
+ORDER BY total_sold DESC 
+LIMIT 10;
+
+-- Top-selling product by category
+
+SELECT category, product_name, total_sold
+  FROM (
+  SELECT 
+  p.category,
+  p.product_name,
+  SUM(od.quantity) AS total_sold,
+  ROW_NUMBER() OVER (PARTITION BY p.category ORDER BY SUM(od.quantity) DESC ) AS rn
+FROM order_details od 
+JOIN products p ON od.product_id = p.product_id
+JOIN orders o ON od.order_id = o.order_id
+WHERE o.order_status = 'delivered'
+GROUP BY p.category, p.product_name
+  ) ranked
+  WHERE rn = 1
+ORDER BY total_sold DESC;
+
+-- Top-selling products were identified by summing quantities sold and ranking products within each category using ROW_NUMBER().
+
+-- Top-selling category
+
+SELECT 
+  p.category,
+  SUM(od.quantity) AS total_sold
+FROM order_details od 
+JOIN products p ON od.product_id = p.product_id
+JOIN orders o ON od.order_id = o.order_id
+WHERE order_status = 'delivered'
+GROUP BY p.category
+ORDER BY total_sold DESC
+LIMIT 3;
+
+-- Customer Analysis
+--===================
+
+Top 3 Customers
+
+SELECT 
+  o.customer_id,
+  c.customer_name,
+  COUNT (o.order_id) AS total_orders
+FROM orders o
+LEFT JOIN customers c ON o.customer_id = c.customer_id
+WHERE o.order_status = 'delivered'
+GROUP BY 
+  o.customer_id,
+  c.customer_name
+ORDER BY total_orders DESC
+LIMIT 3;
+
+-- Inventory Analysis
+--===================
+
+Low stock products
+
+SELECT * FROM inventory
+WHERE stock_quantity < 10;
+
+-- Financial Analysis
+--====================
+
+-- Total Revenue - 377902.70
+SELECT 
+  SUM (od.unit_price * od.quantity) AS total_revenue
+FROM orders o
+JOIN order_details od ON o.order_id = od.order_id
+WHERE o.order_status = 'delivered';
+
+-- Revenue was computed using delivered transactions only by multiplying final unit price by quantity purchased.
+
+-- Total profit - 99858.70
+
+SELECT 
+  SUM ((od.unit_price - p.cost)* od.quantity) AS total_profit
+FROM order_details od 
+JOIN orders o ON od.order_id = o.order_id
+JOIN products p ON od.product_id = p.product_id
+WHERE o.order_status = 'delivered';
+
+-- Total Cost
+
+SELECT 
+  SUM (p.cost * od.quantity) AS total_cost
+FROM order_details od
+JOIN orders o ON od.order_id = o.order_id
+JOIN products p ON od.product_id = p.product_id
+WHERE o.order_status = 'delivered';
+
+
+-- Revenue by category
+
+SELECT 
+  p.category,
+  SUM(od.quantity * od.unit_price) AS revenue_by_category
+FROM order_details od 
+JOIN products p ON od.product_id = p.product_id
+JOIN orders o ON od.order_id = o.order_id
+WHERE o.order_status = 'delivered'
+GROUP BY p.category
+ORDER BY revenue_by_category DESC;
+
+-- Revenue by category was calculated using delivered transactions only to reflect realized sales performance across product groups.
+
+-- Profit by Category
+
+SELECT 
+  p.category,
+  SUM ((od.unit_price - p.cost)* od.quantity) AS profit_by_category
+FROM order_details od 
+JOIN products p ON od.product_id = p.product_id
+JOIN orders o ON od.order_id = o.order_id
+WHERE o.order_status = 'delivered'
+GROUP BY p.category
+ORDER BY profit_by_category DESC;
+
+-- -- Profit by category was calculated using delivered transactions only to reflect realized sales performance across product groups.
+
+-- Average order value (AOV) - 3704.93
+SELECT AVG (order_revenue)
+FROM (
+  SELECT 
+  o.order_id,
+  SUM (od.unit_price * od.quantity) AS order_revenue
+FROM orders o
+JOIN order_details od ON o.order_id = od.order_id
+WHERE o.order_status = 'delivered'
+GROUP BY o.order_id
+) a;
+
+--Average order value was calculated using delivered transactions grouped by order before computing the mean revenue.
+
+-- Profit Margin - 26.4
+
+SELECT (
+  SUM ((od.unit_price - p.cost) * quantity) /
+  SUM (od.quantity * od.unit_price)
+) * 100 AS Profit_margin
+FROM order_details od 
+JOIN products p ON od.product_id = p.product_id
+JOIN orders o ON od.order_id = o.order_id
+WHERE order_status = 'delivered'
+

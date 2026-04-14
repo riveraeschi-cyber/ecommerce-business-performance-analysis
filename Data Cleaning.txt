@@ -1,0 +1,257 @@
+-- 1. CHECK ROW COUNT - This proves expected rows were loaded.
+
+SELECT COUNT(*) FROM customers;
+SELECT COUNT(*) FROM orders;
+SELECT COUNT(*) FROM order_details;
+SELECT COUNT(*) FROM products;
+SELECT COUNT(*) FROM suppliers;
+SELECT COUNT(*) FROM warehouses;
+SELECT COUNT(*) FROM inventory;
+
+RESULT: 
+customers = 100
+orders = 500
+order_details = 1000
+products = 200
+suppliers = 20
+warehouses = 4
+inventory = 400
+
+-- 2. Missing Values Check
+
+Only nullable and business-relevant columns were checked, while primary keys and NOT NULL columns were excluded because schema constraints already enforce completeness.
+
+- Customers
+
+SELECT 
+  SUM(CASE WHEN email IS NULL THEN 1 ELSE 0 END) AS missing_email,
+  SUM(CASE WHEN country IS NULL THEN 1 ELSE 0 END) AS missing_country
+FROM customers;
+
+Result:
+missing_email = 10 missing values
+missing_country = 14 missing values
+
+- Suppliers
+
+SELECT 
+  SUM(CASE WHEN supplier_country IS NULL THEN 1 ELSE 0 END) AS missing_country
+FROM suppliers;
+
+Result:
+supplier_country = no missing values
+
+- Warehouses
+
+SELECT 
+  SUM(CASE WHEN location IS NULL THEN 1 ELSE 0 END) AS missing_location
+FROM warehouses;
+
+Result:
+location = no missing values
+
+- Inventory
+
+SELECT 
+  SUM(CASE WHEN last_restock_date IS NULL THEN 1 ELSE 0 END) AS missing_restock_date
+FROM inventory;
+
+Result:
+last_restock_date = no missing values
+
+- Products
+
+SELECT 
+  SUM(CASE WHEN cost IS NULL THEN 1 ELSE 0 END) AS missing_cost_value
+FROM products;
+
+Result:
+cost = no missing values
+
+-- 3. CHECK DUPLICATES
+
+- CUSTOMERS - No Duplicate
+
+SELECT 
+  email,
+  COUNT(*) AS duplicate_count
+FROM customers
+WHERE email IS NOT NULL
+GROUP BY email
+HAVING COUNT(*) > 1;
+
+
+- ORDERS - No Duplicate
+
+SELECT 
+  order_id,
+  COUNT(*) AS duplicate_count
+FROM orders
+GROUP BY order_id
+HAVING COUNT(*) > 1;
+
+
+- ORDER_DETAILS - No Duplicate
+
+SELECT 
+  order_id,
+  product_id,
+  quantity,
+  discount,
+  COUNT(*) AS duplicate_count
+FROM order_details
+GROUP BY 
+  order_id,
+  product_id,
+  quantity,
+  discount
+HAVING COUNT(*) > 1;
+
+- SUPPLIERS - No Duplicate
+
+SELECT 
+  supplier_name,
+  supplier_country,
+  COUNT (*) AS Duplicate
+FROM suppliers
+GROUP BY 
+  supplier_name,
+  supplier_country
+HAVING COUNT (*) >1;
+
+- WAREHOUSES - No Duplicate
+
+SELECT 
+  warehouse_name,
+  location,
+  COUNT (*) AS Duplicate
+FROM warehouses
+GROUP BY 
+  warehouse_name,
+  location
+HAVING COUNT (*) >1;
+
+- INVENTORY - No Duplicate
+
+SELECT 
+  product_id,
+  warehouse_id,
+  COUNT(*) AS duplicate_count
+FROM inventory
+GROUP BY 
+  product_id,
+  warehouse_id
+HAVING COUNT(*) > 1;
+
+- PRODUCTS - No Duplicate
+
+SELECT 
+  product_name,
+  category,
+  cost,
+  supplier_id,
+  COUNT (*) AS Duplicate
+FROM products
+GROUP BY 
+  product_name,
+  category,
+  cost,
+  supplier_id
+HAVING COUNT (*) >1;
+
+-- Products with identical names but different cost values were reviewed as possible product variants rather than automatic duplicates.
+
+
+
+-- 4. CHECK FOREIGN KEY CONSISTENCY 
+
+ -- ORDERS -> CUSTOMERS - ✅ No orphan records found
+SELECT *
+FROM orders o
+LEFT JOIN customers c ON o.customer_id = c.customer_id
+WHERE c.customer_id IS NULL;
+
+-- ORDER_DETAILS -> ORDERS - ✅ No orphan records found
+SELECT *
+FROM order_details od
+LEFT JOIN orders o ON od.order_id = o.order_id
+WHERE o.order_id IS NULL;
+
+-- PRODUCTS -> SUPPLIERS - ✅ No orphan records found
+SELECT *
+FROM products p
+LEFT JOIN suppliers s ON p.supplier_id = s.supplier_id
+WHERE s.supplier_id IS NULL;
+
+-- INVENTORY -> WAREHOUSES - ✅ No orphan records found
+SELECT *
+FROM inventory i
+LEFT JOIN warehouses w ON i.warehouse_id = w.warehouse_id
+WHERE w.warehouse_id IS NULL;
+
+-- INVENTORY -> PRODUCTS - ✅ No orphan records found
+SELECT *
+FROM inventory i
+LEFT JOIN products p ON i.product_id = p.product_id
+WHERE p.product_id IS NULL;
+
+-- ORDER_DETAILS -> PRODUCTS - ✅ No orphan records found
+SELECT *
+FROM order_details od
+LEFT JOIN products p ON od.product_id = p.product_id
+WHERE p.product_id IS NULL;
+
+-- Result: All foreign key relationships are valid. No orphan records detected across transactional and master tables.
+
+
+-- 5. CHECK BUSINESS LOGIC VALIDATION
+
+-- Orders without line items
+SELECT *
+FROM orders o
+LEFT JOIN order_details od ON o.order_id = od.order_id
+WHERE od.order_id IS NULL;
+
+-- Cleaning action: reclassify incomplete orders as unverified
+
+UPDATE orders
+SET order_status = 'unverified'
+WHERE order_id IN (
+    SELECT o.order_id
+    FROM orders o
+    LEFT JOIN order_details od ON o.order_id = od.order_id
+    WHERE od.order_id IS NULL
+);
+
+-- Result: 76 orders without line items were identified and reclassified as unverified transactions.
+
+6. CHECK BUSINESS RULES
+
+-- Products price > cost - VALID
+SELECT *
+FROM products
+WHERE price < cost;
+
+-- Inventory stock not negative - VALID
+SELECT *
+FROM inventory
+WHERE stock_quantity < 0;
+
+-- Discount valid range - VALID
+SELECT *
+FROM order_details
+WHERE discount < 0;
+
+Discount values are stored as monetary deductions rather than percentage rates.
+
+-- Quantity positive - VALID
+SELECT *
+FROM order_details
+WHERE quantity <= 0;
+
+-- Order date realism - VALID
+SELECT *
+FROM orders
+WHERE order_date > CURRENT_DATE;
+
+-- Result: Dataset passed structural, relational, and business-rule validation and is ready for analysis.
