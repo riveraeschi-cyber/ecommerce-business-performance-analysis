@@ -1,0 +1,117 @@
+1️⃣ Source of Data
+
+MOCKAROO
+ - to generate realistic sample data.
+
+
+2️⃣ Column Definitions & Settings
+
+Table customers - Data of Customers - 100 ROWS
+  customer_id - ID number of customers upon signup - ROW NUMBER
+  customer_name - Name of customers - FULL NAME
+  email - Email of customers - EMAIL ADDRESS with 10 NULL out of 100 rows
+  country - Country where customer live - COUNTRY Restrict [United States, United Kingdom, Japan, Canada, Philippines, South Korea] with 14 NULL out of 100 rows
+  signup_date - Datetime when customer signed-up - DATETIME (2025 - 2026)
+
+
+
+Table suppliers - Data of Suppliers - 20 ROWS
+  supplier_id - ID number of suppliers - ROW NUMBER
+  supplier_name - Name of suppliers - FULL NAME
+  supplier_country - Country of suppliers- COUNTRY Restrict [China, Vietnam, Japan]
+
+
+
+
+Table products - Data of products - 200 ROWS
+  product_id - ID number of products - ROW NUMBER
+  product_name - Name of product - FORMULA - (if category == 'Electronics' then ['Laptop','Headphones','Keyboard','Mouse','Tablet','Cellphone'].sample
+elsif category == 'Toys' then ['Toy Car','Puzzle','Doll','Building Blocks','Racket'].sample
+elsif category == 'Books' then ['Math Book','Science Book','Story Book','Dictionary'].sample
+elsif category == 'Beauty' then ['Lipstick','Shampoo','Perfume','Face Cream'].sample
+elsif category == 'Sports' then ['Football','Basketball','Tennis Racket','Yoga Mat'].sample
+elsif category == 'Clothing' then ['T-shirt','Jeans','Jacket','Dress'].sample
+elsif category == 'Food' then ['Chocolate','Biscuits','Coffee','Tea','Bread'].sample
+else ['Pan','Plate','Knife','Bottle','Spoon','Tong'].sample
+end)
+  category - Category of products - CUSTOM LIST - [Electronics, Clothing, Home & Kitchen, Beauty, Sports, Books, Toys, Food]
+  price - selling price of products - FORMULA - (case category
+when "Electronics" then random(500,2500)
+when "Toys" then random(10,100)
+when "Books" then random(100, 200)
+when "Beauty" then random(100,250)
+when "Sports" then random(200, 500)
+when "Clothing" then random(150,300)
+when "Food" then random(100, 300)
+else random(150, 200)
+end)
+  cost - Cost of product - FORMULA (price * random(0.6,0.8).round)
+  supplier_id - ID of suppliers - NUMBER (Min - 1 -- Max - 20)
+
+
+
+Table inventory - DATA of products in inventory - 2 merges data (200 + 200 =400 ROWS)
+  inventory_id - ID of inventory - ROW NUMBER
+  product_id - ID of products in inventory - 
+Formula 
+	(inventory_id % 200) + 1
+	(inventory_id % 199) + 3
+  warehouse_id - ID of warehouse where product in inventory is - 
+Formula
+	((inventory_id % 200).floor % 4) + 1
+  stock_quantity Quantity of products stocks in inventory - NUMBER (Min - 0 -- Max - 500)
+  last_restock_date date - Date of last restock - DATETIME (2025 - 2026)
+
+
+
+Table orders - DATA of orders - 500 ROWS
+  order_id - ID number of orders - ROW NUMBER
+  customer_id - ID of customers - NUMBER (Min - 1 -- Max - 100)
+  order_date - Datetime of order - DATETIME (2025 - 2026)
+  order_status - Status of order - CUSTOM LIST [cancelled, pending, shipped, delivered]
+  payment_method - Mode of payment - CUSTOM LIST [credit_card, bank_transfer, paypal, cash]
+
+
+
+Table order_details - DATA of order_details - 1000 ROWS
+  order_detail_id - ID number of order_details - ROW NUMBER
+  order_id - ID of orders - NUMBER (Min - 1 -- Max - 500)
+  product_id - ID of product - NUMBER (Min - 1 -- Max 200)
+  quantity - NUMBERS (Min - 1 -- Max - 10)
+  discount - Custom list [0, 0, 0, 0, 0, 0.05, 0.05, 0.05, 0.05, 0.10, 0.10, 0.10, 0.15)
+
+
+SQL - Postgres/Supabase connect to Beekeper Studio.
+
+Warehouse CODE
+INSERT INTO warehouses (warehouse_id, warehouse_name, location)
+VALUE 
+(1, Tokyo Warehouse, Japan),
+(2, Singapore Hub, Singapore),
+(3, California Warehouse, United States),
+(4, Sydney Warehouse, Australia);
+
+
+
+UNIT_PRICE CODE - New order_details table with unit_price
+
+WITH unit_price AS (
+  SELECT 
+  od.order_detail_id,
+  od.order_id,
+  od.product_id,
+  od.quantity,
+  p.price,
+  (p.price * CAST(od.discount AS DECIMAL (5, 2))) AS discount
+FROM order_details od
+JOIN products p ON od.product_id = p.product_id
+)
+SELECT 
+  order_detail_id,
+  order_id,
+  product_id,
+  quantity,
+  discount,
+  (price - discount) AS unit_price
+FROM unit_price 
+ORDER BY order_detail_id ASC
