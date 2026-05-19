@@ -1,8 +1,5 @@
 # E-commerce Business Performance Analysis
 
-## Project Overview
-This project focuses on analyzing e-commerce business performance using SQL and Tableau. The analysis covers sales trends, customer behavior, product performance, profitability, and inventory management to help generate actionable business insights.
-
 ---
 
 ## Project Overview
